@@ -35,7 +35,7 @@ public class AuthorityUtils {
     }
 
     //데이터베이스에 저장되어있는 권한정보 목록(Role)을 가져와 이를 기반으로 권한 정보를 생성한다.
-    public List<GrantedAuthority> crateAuthorities(List<String> roles){
+    public List<GrantedAuthority> createAuthorities(List<String> roles){
         List<GrantedAuthority> authorities = roles.stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                 .collect(Collectors.toList());

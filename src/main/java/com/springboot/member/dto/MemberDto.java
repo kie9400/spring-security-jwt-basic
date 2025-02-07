@@ -18,6 +18,9 @@ public class MemberDto {
         @Email
         private String email;
 
+        @NotBlank
+        private String password;
+
         @NotBlank(message = "이름은 공백이 아니어야 합니다.")
         private String name;
 
@@ -33,9 +36,6 @@ public class MemberDto {
 
         @NotSpace(message = "회원 이름은 공백이 아니어야 합니다")
         private String name;
-
-        @NotBlank
-        private String password;
 
         @NotSpace(message = "휴대폰 번호는 공백이 아니어야 합니다")
         @Pattern(regexp = "^010-\\d{3,4}-\\d{4}$",

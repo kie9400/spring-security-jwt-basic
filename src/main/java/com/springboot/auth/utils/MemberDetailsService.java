@@ -31,7 +31,8 @@ public class MemberDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         //데이터베이스에 해당 이메일(username)이 저장되어있는지 찾는다.
         Optional<Member> optionalMember = memberRepository.findByEmail(username);
-        Member findMember = optionalMember.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+        Member findMember = optionalMember.orElseThrow(()
+                -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
 
         //찾은 멤버를 MemberDetails클래스를 이용하여 UserdDetails타입으로 변환시킨 후 반환
         return new MemberDetails(findMember);
@@ -50,7 +51,7 @@ public class MemberDetailsService implements UserDetailsService {
         //DB에 있던 Role 정보를 전달하여 권한 목록을 생성
         @Override
         public Collection<? extends GrantedAuthority> getAuthorities() {
-            return authorityUtils.crateAuthorities(this.getRoles());
+            return authorityUtils.createAuthorities(this.getRoles());
         }
 
         //Spring Security에서 인식할 수 있는 username에 이메일을 저장한다.

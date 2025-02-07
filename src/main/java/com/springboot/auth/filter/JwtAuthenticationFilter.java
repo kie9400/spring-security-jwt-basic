@@ -39,6 +39,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         //클라이언트로부터 받은 Username과 PW를 DTO 클래스로 역직렬화하기 위해 ObjectMapper 인스턴스 생성
+        //서블릿의 영역이기 때문에 직접 매핑
         ObjectMapper objectMapper = new ObjectMapper();
 
         //ServletInputStream을 loginDto 클래스의 객체로 역직렬화
@@ -49,6 +50,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 new UsernamePasswordAuthenticationToken(loginDto.getUsername(),loginDto.getPassword());
 
         //위에서 생성한 토큰을 AuthenticationManager에게 전달하여 인증처리 위임
+        //AuthenticationManager가 실행하면서 인증을 처리한다.
         return authenticationManager.authenticate(authenticationToken);
     }
 
@@ -66,6 +68,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String accessToken = delegateAccessToken(member);
         //리플래시 토큰 생성
         String refreshToken = delegateRefreshToken(member);
+
+        //response header에 accessToken를 추가한다.
+        //AccessToken은 클라이언트 측에서 백엔드 측에 요청을 보낼때마다 request header에 추가해서 클라이언트 측의 자격을 증명하는 데 사용된다.
+        response.setHeader("Authorization", "Bearer " + accessToken);
+        //RefreshToken를 추가한다. 액세스토큰을 재발급하기 위해 사용
+        response.setHeader("Refresh", refreshToken);
     }
 
     //액세스 토큰 생성 메서드
